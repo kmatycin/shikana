@@ -12,12 +12,19 @@ function LoginPage() {
         e.preventDefault();
         try {
             const response = await axios.post('/api/auth/login', { email, password });
-            const token = response.data.token;
-            localStorage.setItem('token', token); // Сохраняем токен
+            console.log('Ответ от бэкенда:', response.data);
+            let token = response.data.data.token; // Токен внутри data
+            if (!token) {
+                throw new Error('Токен не получен от сервера');
+            }
+            // Убираем префикс "Bearer " если он есть
+            token = token.replace('Bearer ', '');
+            console.log('Сохраняемый токен:', token);
+            localStorage.setItem('token', token);
             setError('');
-            navigate('/'); // Перенаправляем на главную страницу
+            navigate('/');
         } catch (err) {
-            setError('Ошибка входа: ' + (err.response?.data?.message || 'Попробуйте снова'));
+            setError('Ошибка входа: ' + (err.response?.data?.message || err.message || 'Попробуйте снова'));
         }
     };
 

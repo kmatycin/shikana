@@ -17,7 +17,7 @@ public class ProfileServiceImpl implements ProfileService {
     @Autowired
     private UserRepository userRepository;
     @Autowired
-    private JwtService jwtUtil;
+    private JwtService jwtService;
 
     @Override
     public ProfileDto getProfile(UUID id) {
@@ -34,7 +34,7 @@ public class ProfileServiceImpl implements ProfileService {
 
     @Override
     public ProfileDto updateProfile(ProfileDto profileDto, String token) {
-        UUID userId = jwtUtil.extractUserId(token);
+        UUID userId = jwtService.extractUserId(token);
         UserEntity user = userRepository.findById(userId)
                 .orElseThrow(() -> new CustomException(ErrorCodes.CODE_NOT_NULL));
 
@@ -52,5 +52,21 @@ public class ProfileServiceImpl implements ProfileService {
         updatedProfileDto.setBio(updatedUser.getBio());
 
         return updatedProfileDto;
+    }
+
+    @Override
+    public ProfileDto getProfileByToken(String token) {
+        System.out.println("Токен в сервисе: " + token);
+        UUID userId = jwtService.extractUserId(token); // Токен уже должен быть чистым
+        System.out.println("Извлечённый userId: " + userId);
+        UserEntity user = userRepository.findById(userId)
+                .orElseThrow(() -> new CustomException(ErrorCodes.USER_NOT_FOUND));
+        ProfileDto profileDto = new ProfileDto();
+        profileDto.setId(user.getId());
+        profileDto.setUsername(user.getUsername());
+        profileDto.setRole(user.getRole());
+        profileDto.setAvatarUrl(user.getAvatarUrl());
+        profileDto.setBio(user.getBio());
+        return profileDto;
     }
 }

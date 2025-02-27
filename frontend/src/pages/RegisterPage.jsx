@@ -19,14 +19,22 @@ function RegisterPage() {
                 password,
                 role,
             });
-            const token = response.data.token; // Предполагаем, что бэкенд возвращает токен
+            console.log('Ответ от бэкенда:', response.data);
+            let token = response.data.data.token;
+            if (!token) {
+                throw new Error('Токен не получен от сервера');
+            }
+            token = token.replace('Bearer ', ''); // Убираем "Bearer "
+            console.log('Сохраняемый токен:', token);
             localStorage.setItem('token', token);
             setError('');
-            navigate('/'); // Перенаправляем на главную
+            navigate('/');
         } catch (err) {
-            setError('Ошибка регистрации: ' + (err.response?.data?.message || 'Попробуйте снова'));
+            setError('Ошибка регистрации: ' + (err.response?.data?.message || err.message || 'Попробуйте снова'));
         }
     };
+
+    // ... остальной код формы ...
 
     return (
         <div className="auth-container">

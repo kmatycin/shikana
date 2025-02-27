@@ -10,6 +10,7 @@ import net.dunice.mstool.security.JwtService;
 import net.dunice.mstool.service.NewsService;
 import org.springframework.stereotype.Service;
 
+import java.nio.file.AccessDeniedException;
 import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
@@ -18,7 +19,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class NewsServiceImpl implements NewsService {
     private final NewsRepository newsRepository;
-    private final JwtService jwtUtil;
+    private final JwtService jwtService;
 
     @Override
     public List<NewsDto> getAllNews(int limit, int offset) {
@@ -29,29 +30,26 @@ public class NewsServiceImpl implements NewsService {
 
     @Override
     public NewsDto createNews(NewsDto newsDto, String token) {
-        // Проверка роли
-        String role = jwtUtil.extractRole(token);
+        System.out.println("Токен в createNews: " + token);
+        String role = jwtService.extractRole(token);
+        System.out.println("Извлечённая роль: " + role);
         if (!"ORGANIZER".equals(role) && !"PILOT".equals(role)) {
-            throw new CustomException(ErrorCodes.CODE_NOT_NULL);
+            throw new CustomException(ErrorCodes.NO_ACCESS_TO_USER_DATA);
         }
-
-        // Маппинг в сущность
         NewsEntity news = new NewsEntity();
         news.setContent(newsDto.getContent());
-        //news.setAuthorId(jwtUtil.extractUserId(token));
+        UUID authorId = jwtService.extractUserId(token);
+        System.out.println("Извлечённый authorId: " + authorId);
+        news.setAuthorId(authorId);
         news.setCreatedAt(Instant.now());
-
-        // Сохранение
+        System.out.println("Сохраняем новость: " + news);
         NewsEntity savedNews = newsRepository.save(news);
-
-        // Маппинг обратно в DTO
         NewsDto savedNewsDto = new NewsDto();
         savedNewsDto.setId(savedNews.getId());
         savedNewsDto.setContent(savedNews.getContent());
-        //savedNewsDto.setAuthorId(savedNews.getAuthorId());
-        //savedNewsDto.setAuthorName(getAuthorName(savedNews.getAuthorId())); // Предполагается метод получения имени
+        savedNewsDto.setAuthorId(savedNews.getAuthorId());
+        savedNewsDto.setAuthorName(getAuthorName(savedNews.getAuthorId()));
         savedNewsDto.setCreatedAt(savedNews.getCreatedAt());
-
         return savedNewsDto;
     }
 

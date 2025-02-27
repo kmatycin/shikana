@@ -42,8 +42,11 @@ public class JwtFilter extends OncePerRequestFilter {
 
     private String getJwtFromRequest(HttpServletRequest request) {
         String bearerToken = request.getHeader(ConstantFields.AUTHORIZATION);
+        System.out.println("Полученный заголовок: " + bearerToken); // Отладка
         if (bearerToken != null && bearerToken.startsWith(ConstantFields.BEARER)) {
-            return bearerToken.substring(7);
+            String token = bearerToken.substring(7).trim(); // Убираем пробелы
+            System.out.println("Извлечённый токен: " + token); // Отладка
+            return token;
         }
         return ValidationConstants.TOKEN_NOT_PROVIDED;
     }

@@ -12,14 +12,25 @@ import org.springframework.web.bind.annotation.*;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/api/profiles")
+@RequestMapping("/profiles")
 @RequiredArgsConstructor
 public class ProfileController {
 
     private final ProfileService profileService;
 
-    @GetMapping("/{id}")
-    public ResponseEntity<CustomSuccessResponse<ProfileDto>> getProfile(@PathVariable UUID id) {
+    @GetMapping("/me")
+    public ResponseEntity<CustomSuccessResponse<ProfileDto>> getCurrentProfile(
+            @RequestHeader("Authorization") String token) {
+        System.out.println("Токен в контроллере (до очистки): " + token);
+        String cleanToken = token.startsWith("Bearer ") ? token.substring(7).trim() : token.trim();
+        System.out.println("Очищенный токен в контроллере: " + cleanToken);
+        ProfileDto profile = profileService.getProfileByToken(cleanToken);
+        CustomSuccessResponse<ProfileDto> response = new CustomSuccessResponse<>(profile);
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/{uuid}")
+    public ResponseEntity<CustomSuccessResponse<ProfileDto>> getProfile(@PathVariable("uuid") UUID id) {
         ProfileDto profile = profileService.getProfile(id);
         CustomSuccessResponse<ProfileDto> response = new CustomSuccessResponse<>(profile);
         return ResponseEntity.ok(response);
@@ -28,8 +39,9 @@ public class ProfileController {
     @PutMapping("/me")
     public ResponseEntity<CustomSuccessResponse<ProfileDto>> updateProfile(
             @RequestBody ProfileDto profileDto,
-            @RequestHeader(ConstantFields.AUTHORIZATION) String token) {
-        ProfileDto updatedProfile = profileService.updateProfile(profileDto, token);
+            @RequestHeader("Authorization") String token) {
+        String cleanToken = token.startsWith("Bearer ") ? token.substring(7).trim() : token.trim();
+        ProfileDto updatedProfile = profileService.updateProfile(profileDto, cleanToken);
         CustomSuccessResponse<ProfileDto> response = new CustomSuccessResponse<>(updatedProfile);
         return ResponseEntity.ok(response);
     }
