@@ -1,0 +1,63 @@
+.news-container {
+  max-width: 800px;
+  margin: 20px auto;
+}
+
+.news-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.news-form textarea {
+  padding: 10px;
+  font-size: 16px;
+  resize: vertical;
+}
+
+.news-form button {
+  padding: 10px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  cursor: pointer;
+  max-width: 200px;
+}
+
+.news-form button:hover {
+  background-color: #0056b3;
+}
+
+.news-form button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.news-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.news-item {
+  border: 1px solid #ddd;
+  padding: 15px;
+  border-radius: 5px;
+}
+
+.news-item small {
+  color: #666;
+}
+
+.app {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.main-content {
+  flex: 1;
+  padding-top: 60px; /* Отступ для фиксированного хедера */
+  background: #f5f5f5; /* Светлый фон тела */
+}

@@ -19,7 +19,7 @@ public class EventEntity {
     private String title;
 
     @Column(nullable = false)
-    private Instant date;
+    private String date;
 
     @Column(nullable = false)
     private String location;
@@ -30,7 +30,7 @@ public class EventEntity {
     // Конструкторы
     public EventEntity() {}
 
-    public EventEntity(String title, Instant date, String location, String status) {
+    public EventEntity(String title, String date, String location, String status) {
         this.title = title;
         this.date = date;
         this.location = location;

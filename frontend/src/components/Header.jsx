@@ -1,14 +1,19 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { FaSignOutAlt } from 'react-icons/fa'; // Для иконки выхода (опционально)
+import { FaBars } from 'react-icons/fa'; // Импортируем иконку для сендвича
 
 function Header() {
     const navigate = useNavigate();
     const token = localStorage.getItem('token');
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
 
     const handleLogout = () => {
         localStorage.removeItem('token');
         navigate('/login');
+    };
+
+    const toggleMenu = () => {
+        setIsMenuOpen(!isMenuOpen);
     };
 
     return (
@@ -16,41 +21,50 @@ function Header() {
             <div className="header-container">
                 {/* Логотип */}
                 <div className="logo" onClick={() => navigate('/')}>
-                    <h1 className="logo-text">MotorsportHub</h1>
+                    ШИКАНА
                 </div>
 
-                {/* Навигация и действия */}
-                <div className="nav-actions">
-                    <nav className="nav">
-                        <ul className="nav-list">
-                            <li>
-                                <button onClick={() => navigate('/')} className="nav-button">
-                                    События
-                                </button>
-                            </li>
-                            <li>
-                                <button onClick={() => navigate('/news')} className="nav-button">
-                                    Новости
-                                </button>
-                            </li>
-                            <li>
-                                <button onClick={() => navigate('/profile')} className="nav-button">
-                                    Профиль
-                                </button>
-                            </li>
-                        </ul>
-                    </nav>
-                    {token ? (
-                        <button onClick={handleLogout} className="nav-button logout-button">
-                            <FaSignOutAlt className="inline mr-1" /> Выйти
-                        </button>
-                    ) : (
-                        <button onClick={() => navigate('/login')} className="nav-button login-button">
-                            Вход
-                        </button>
-                    )}
-                </div>
+                {/* Сендвич-иконка (hamburger) */}
+                <button onClick={toggleMenu} className="hamburger">
+                    <FaBars className="hamburger-icon" />
+                </button>
             </div>
+
+            {/* Выпадающее меню */}
+            {isMenuOpen && (
+                <div className="menu">
+                    <ul className="menu-list">
+                        <li>
+                            <button onClick={() => { navigate('/news'); setIsMenuOpen(false); }} className="menu-item">
+                                Новости
+                            </button>
+                        </li>
+                        <li>
+                            <button onClick={() => { navigate('/'); setIsMenuOpen(false); }} className="menu-item">
+                                События
+                            </button>
+                        </li>
+                        <li>
+                            <button onClick={() => { navigate('/profile'); setIsMenuOpen(false); }} className="menu-item">
+                                Профиль
+                            </button>
+                        </li>
+                        {token ? (
+                            <li>
+                                <button onClick={() => { handleLogout(); setIsMenuOpen(false); }} className="menu-item logout-button">
+                                    Выйти
+                                </button>
+                            </li>
+                        ) : (
+                            <li>
+                                <button onClick={() => { navigate('/login'); setIsMenuOpen(false); }} className="menu-item login-button">
+                                    Вход
+                                </button>
+                            </li>
+                        )}
+                    </ul>
+                </div>
+            )}
         </header>
     );
 }

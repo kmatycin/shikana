@@ -17,10 +17,16 @@ public class EventDto {
     private String title;
 
     @NotNull(message = "Date cannot be null")
-    private Instant date;
+    private String date;
 
     @NotBlank(message = "Location cannot be empty")
     private String location;
 
     private String status;
+
+    private String game;
+
+    private String stages;
+
+    private String organizer;
 }

@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class PlaceholderController {
 
-    @GetMapping("/messenger")
+    @GetMapping("/api/messenger")
     public ResponseEntity<BaseSuccessResponse> getMessenger() {
         BaseSuccessResponse response = new BaseSuccessResponse();
         response.setStatusCode(0);
@@ -16,7 +16,7 @@ public class PlaceholderController {
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/top32")
+    @GetMapping("/api/top32")
     public ResponseEntity<BaseSuccessResponse> getTop32() {
         BaseSuccessResponse response = new BaseSuccessResponse();
         response.setStatusCode(0);

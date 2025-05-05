@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/events")
+@RequestMapping("/api/events")
 @RequiredArgsConstructor
 public class EventController {
 
@@ -27,7 +27,15 @@ public class EventController {
         CustomSuccessResponse<List<EventDto>> response = new CustomSuccessResponse<>(events);
         return ResponseEntity.ok(response);
     }
-
+    @GetMapping("/external")
+    public ResponseEntity<CustomSuccessResponse<List<EventDto>>> getExternalEvents() {
+        try {
+            List<EventDto> externalEvents = eventService.parseExternalEvents();
+            return ResponseEntity.ok(new CustomSuccessResponse<>(externalEvents));
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().build();
+        }
+    }
     @PostMapping
     public ResponseEntity<CustomSuccessResponse<EventDto>> createEvent(
             @RequestBody EventDto eventDto,

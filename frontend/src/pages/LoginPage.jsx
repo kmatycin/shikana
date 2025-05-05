@@ -1,62 +1,82 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import './LoginPage.css';
 
 function LoginPage() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     const navigate = useNavigate();
+    const videoRef = useRef(null); // Ссылка на видео для управления
+
+    useEffect(() => {
+        // Автоматическое воспроизведение видео при загрузке
+        if (videoRef.current) {
+            videoRef.current.play().catch((error) => {
+                console.error('Ошибка автоплей видео:', error);
+            });
+        }
+    }, []);
 
     const handleLogin = async (e) => {
         e.preventDefault();
         try {
             const response = await axios.post('/api/auth/login', { email, password });
-            console.log('Ответ от бэкенда:', response.data);
-            let token = response.data.data.token; // Токен внутри data
-            if (!token) {
-                throw new Error('Токен не получен от сервера');
-            }
-            // Убираем префикс "Bearer " если он есть
-            token = token.replace('Bearer ', '');
+            let token = response.data.data.token.replace('Bearer ', '').trim();
             console.log('Сохраняемый токен:', token);
             localStorage.setItem('token', token);
             setError('');
             navigate('/');
         } catch (err) {
-            setError('Ошибка входа: ' + (err.response?.data?.message || err.message || 'Попробуйте снова'));
+            setError('Ошибка входа: ' + (err.response?.data?.message || 'Попробуйте снова'));
         }
     };
 
+    const handleRegisterClick = () => {
+        navigate('/register');
+    };
+
+
+
     return (
-        <div className="auth-container">
-            <h1>Вход</h1>
-            {error && <p className="error">{error}</p>}
-            <form onSubmit={handleLogin}>
-                <div>
-                    <label>Email:</label>
-                    <input
-                        type="email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        required
-                    />
+        <div className="login-page">
+                <div className="login-form">
+                    <h1 className="login-title">Вход</h1>
+                    {error && <p className="error-message">{error}</p>}
+                    <div className="input-group">
+                        <div className="input-field">
+                            <input
+                                type="email"
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
+                                className="input"
+                                placeholder="email"
+                            />
+                        </div>
+                        <div className="input-field">
+                            <input
+                                type="password"
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
+                                className="input"
+                                placeholder="пароль"
+                            />
+                        </div>
+                    </div>
+                    <button onClick={handleLogin} className="sign-in-button">
+                        Войти
+                    </button>
+                    <div className="register-link">
+                        <span className="no-account">Нет Аккаунта?</span>
+                        <button onClick={handleRegisterClick} className="create-button">
+                            Создать
+                        </button>
+                    </div>
                 </div>
-                <div>
-                    <label>Пароль:</label>
-                    <input
-                        type="password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        required
-                    />
-                </div>
-                <button type="submit">Войти</button>
-            </form>
-            <p>
-                Нет аккаунта? <a href="/register">Зарегистрируйтесь</a>
-            </p>
-        </div>
+
+            </div>
+
     );
 }
 
