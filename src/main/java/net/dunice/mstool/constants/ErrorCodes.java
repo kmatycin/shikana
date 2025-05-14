@@ -54,7 +54,9 @@ public enum ErrorCodes {
     NEWS_IMAGE_HAS_TO_BE_PRESENT(45, ValidationConstants.NEWS_IMAGE_HAS_TO_BE_PRESENT),
     USER_WITH_THIS_EMAIL_ALREADY_EXIST(46, ValidationConstants.USER_WITH_THIS_EMAIL_ALREADY_EXIST),
     HTTP_MESSAGE_NOT_READABLE_EXCEPTION(47, ValidationConstants.HTTP_MESSAGE_NOT_READABLE_EXCEPTION),
-    NO_ACCESS_TO_USER_DATA(48, ValidationConstants.NO_ACCESS_TO_USER_DATA);
+    NO_ACCESS_TO_USER_DATA(48, ValidationConstants.NO_ACCESS_TO_USER_DATA),
+    EVENT_NOT_FOUND(49, "Event not found"),
+    FORBIDDEN(50, "Forbidden"),;
 
     private static Map<String, Integer> codesMap = new HashMap<>();
 

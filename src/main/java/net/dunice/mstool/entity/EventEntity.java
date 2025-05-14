@@ -18,22 +18,54 @@ public class EventEntity {
     @Column(nullable = false)
     private String title;
 
+    @Column(columnDefinition = "TEXT")
+    private String description;
+
     @Column(nullable = false)
     private String date;
 
-    @Column(nullable = false)
+    @Column
     private String location;
 
+    @Column
+    private String imageUrl;
+
     @Column(nullable = false)
-    private String status;
+    private boolean isExternal;
 
-    // Конструкторы
-    public EventEntity() {}
+    @Column(nullable = false)
+    private String status = "UPCOMING";
 
-    public EventEntity(String title, String date, String location, String status) {
-        this.title = title;
-        this.date = date;
-        this.location = location;
-        this.status = status;
+    @Column
+    private String game;
+
+    @Column
+    private String stages;
+
+    @Column
+    private String organizer;
+
+    @Column(nullable = false)
+    private Instant createdAt;
+
+    @Column
+    private Instant updatedAt;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "created_by")
+    private UserEntity createdBy;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "updated_by")
+    private UserEntity updatedBy;
+
+    @PrePersist
+    protected void onCreate() {
+        createdAt = Instant.now();
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        updatedAt = Instant.now();
     }
 }

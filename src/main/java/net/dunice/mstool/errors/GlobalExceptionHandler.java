@@ -1,5 +1,6 @@
 package net.dunice.mstool.errors;
 
+import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.validation.ConstraintViolationException;
 import net.dunice.mstool.DTO.response.common.BaseSuccessResponse;
 import net.dunice.mstool.DTO.response.common.CustomSuccessResponse;
@@ -26,6 +27,14 @@ public class GlobalExceptionHandler {
         return ResponseEntity.badRequest()
                 .header(ConstantFields.HEADER_ERROR_MSG, e.getErrorCodes().getMessage())
                 .body(new CustomSuccessResponse<>(code, List.of(code)));
+    }
+
+    @ExceptionHandler(ExpiredJwtException.class)
+    ResponseEntity<CustomSuccessResponse<Integer>> handle(ExpiredJwtException e) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                .header(ConstantFields.HEADER_ERROR_MSG, "JWT token has expired")
+                .body(new CustomSuccessResponse<>(ErrorCodes.UNAUTHORISED.getCode(), 
+                    List.of(ErrorCodes.UNAUTHORISED.getCode())));
     }
 
     @ExceptionHandler(ConstraintViolationException.class)

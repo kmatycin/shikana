@@ -1,18 +1,16 @@
 package net.dunice.mstool.security;
 
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import net.dunice.mstool.constants.ConstantFields;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import javax.crypto.SecretKey;
+import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.UUID;
-
-import static java.security.KeyRep.Type.SECRET;
 
 @Service
 public class JwtService {
@@ -23,59 +21,84 @@ public class JwtService {
     @Value("${jwt.expiration}")
     private Long jwtExpirationInMs;
 
-    public String generateToken(String subject) {
+    private SecretKey getSigningKey() {
+        byte[] keyBytes = secretKey.getBytes(StandardCharsets.UTF_8);
+        return Keys.hmacShaKeyFor(keyBytes);
+    }
+
+    public String generateToken(String email) {
         return ConstantFields.BEARER +
                 Jwts.builder()
-                        .subject(subject)
+                        .subject(email)
                         .issuedAt(new Date(System.currentTimeMillis()))
                         .expiration(new Date(System.currentTimeMillis() + jwtExpirationInMs))
-                        .signWith(SignatureAlgorithm.HS512, secretKey)
+                        .signWith(getSigningKey())
                         .compact();
     }
 
     public Boolean validateToken(String token) {
-
-        SecretKey key = Keys.hmacShaKeyFor(Decoders.BASE64URL.decode(secretKey));
-
-        return token != null && Jwts.parser()
-                .setSigningKey(key)
+        try {
+            // Remove "Bearer " prefix if present
+            String cleanToken = token.startsWith("Bearer ") ? token.substring(7) : token;
+            
+            Jwts.parser()
+                .verifyWith(getSigningKey())
                 .build()
-                .parseClaimsJws(token)
-                .getBody()
-                .getExpiration()
-                .after(new Date());
+                .parseSignedClaims(cleanToken);
+            return true;
+        } catch (ExpiredJwtException e) {
+            throw e;
+        } catch (Exception e) {
+            return false;
+        }
     }
-    public UUID extractUserId(String token) {
-        // Парсим токен и извлекаем claims
-        Claims claims = Jwts.parser()
-                .setSigningKey(secretKey)
-                .build()
-                .parseClaimsJws(token)
-                .getBody();
 
-        // Предполагаем, что идентификатор пользователя хранится в поле subject
-        String userIdStr = claims.getSubject();
+    public String getEmailFromToken(String token) {
+        try {
+            // Remove "Bearer " prefix if present
+            String cleanToken = token.startsWith("Bearer ") ? token.substring(7) : token;
+            
+            Claims claims = Jwts.parser()
+                    .verifyWith(getSigningKey())
+                    .build()
+                    .parseSignedClaims(cleanToken)
+                    .getPayload();
 
-        // Преобразуем строку в UUID и возвращаем
-        return UUID.fromString(userIdStr);
+            return claims.getSubject();
+        } catch (ExpiredJwtException e) {
+            throw e;
+        }
     }
+
     public String getUsernameFromToken(String jwtToken) {
-
-        SecretKey key = Keys.hmacShaKeyFor(Decoders.BASE64URL.decode(secretKey));
-
-        return Jwts.parser()
-                .setSigningKey(key)
-                .build()
-                .parseClaimsJws(jwtToken)
-                .getBody()
-                .getSubject();
+        try {
+            // Remove "Bearer " prefix if present
+            String cleanToken = jwtToken.startsWith("Bearer ") ? jwtToken.substring(7) : jwtToken;
+            
+            return Jwts.parser()
+                    .verifyWith(getSigningKey())
+                    .build()
+                    .parseSignedClaims(cleanToken)
+                    .getPayload()
+                    .getSubject();
+        } catch (ExpiredJwtException e) {
+            throw e;
+        }
     }
 
     public String extractRole(String token) {
-        return Jwts.parser()
-                .setSigningKey(secretKey)
-                .build()
-                .parseClaimsJws(token)
-                .getBody().get("role", String.class);
+        try {
+            // Remove "Bearer " prefix if present
+            String cleanToken = token.startsWith("Bearer ") ? token.substring(7) : token;
+            
+            return Jwts.parser()
+                    .verifyWith(getSigningKey())
+                    .build()
+                    .parseSignedClaims(cleanToken)
+                    .getPayload()
+                    .get("role", String.class);
+        } catch (ExpiredJwtException e) {
+            throw e;
+        }
     }
 }

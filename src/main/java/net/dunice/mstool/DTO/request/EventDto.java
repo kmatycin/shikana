@@ -1,32 +1,24 @@
 package net.dunice.mstool.DTO.request;
 
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import lombok.Getter;
-import lombok.Setter;
-
+import lombok.Data;
 import java.time.Instant;
-import java.util.UUID;
 
-@Getter
-@Setter
+@Data
 public class EventDto {
-    private UUID id;
-
-    @NotBlank(message = "Title cannot be empty")
     private String title;
-
-    @NotNull(message = "Date cannot be null")
+    private String description;
     private String date;
-
-    @NotBlank(message = "Location cannot be empty")
     private String location;
-
+    private String imageUrl;
+    private boolean isExternal;
+    private Instant createdAt;
+    private Instant updatedAt;
+    private String createdBy;
+    private String updatedBy;
+    
+    // Дополнительные поля для внешних событий
     private String status;
-
     private String game;
-
     private String stages;
-
     private String organizer;
 }

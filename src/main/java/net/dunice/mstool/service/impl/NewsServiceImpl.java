@@ -6,8 +6,10 @@ import lombok.RequiredArgsConstructor;
 import net.dunice.mstool.DTO.request.NewsDto;
 import net.dunice.mstool.constants.ErrorCodes;
 import net.dunice.mstool.entity.NewsEntity;
+import net.dunice.mstool.entity.UserEntity;
 import net.dunice.mstool.errors.CustomException;
 import net.dunice.mstool.repository.NewsRepository;
+import net.dunice.mstool.repository.UserRepository;
 import net.dunice.mstool.security.JwtService;
 import net.dunice.mstool.service.NewsService;
 import org.springframework.stereotype.Service;
@@ -28,45 +30,31 @@ import java.util.logging.Logger;
 @RequiredArgsConstructor
 public class NewsServiceImpl implements NewsService {
     private final NewsRepository newsRepository;
+    private final UserRepository userRepository;
     private final JwtService jwtService;
+    private final ObjectMapper objectMapper;
     private final Logger log = Logger.getLogger(NewsServiceImpl.class.getName());
 
     @Override
     public List<NewsDto> getAllNews(int limit, int offset) {
         // Логика получения новостей с пагинацией
-
         return List.of(); // Заглушка
     }
 
     @Override
     public NewsDto createNews(NewsDto newsDto, String token) {
-        // Валидация
-        if (newsDto == null) {
-            throw new CustomException(ErrorCodes.UNKNOWN);
-        }
-        if (newsDto.getContent() == null || newsDto.getContent().isEmpty() || newsDto.getTitle() == null || newsDto.getTitle().isEmpty()) {
-            throw new CustomException(ErrorCodes.UNKNOWN);
-        }
-
-        // Проверка прав
-        String role = jwtService.extractRole(token);
-        if (!"ORGANIZER".equals(role) && !"PILOT".equals(role)) {
-            throw new CustomException(ErrorCodes.NO_ACCESS_TO_USER_DATA);
-        }
-
-        // Создание новости
+        String email = jwtService.getEmailFromToken(token);
+        UserEntity user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new CustomException(ErrorCodes.USER_NOT_FOUND));
+        
         NewsEntity news = new NewsEntity();
-        news.setContent(newsDto.getContent());
         news.setTitle(newsDto.getTitle());
-        news.setAuthorId(jwtService.extractUserId(token));
-        news.setCreatedAt(Instant.now());
+        news.setContent(newsDto.getContent());
         news.setImageUrl(newsDto.getImageUrl());
-
+        news.setAuthorId(user.getId());
+        news.setCreatedAt(Instant.now());
+        
         NewsEntity savedNews = newsRepository.save(news);
-
-        // Обновление JSON файла
-        updateNewsJson(savedNews);
-
         return convertToDto(savedNews);
     }
 
@@ -82,7 +70,8 @@ public class NewsServiceImpl implements NewsService {
             newsFile.getParentFile().mkdirs();
 
             NewsContainer container = newsFile.exists() ?
-                    mapper.readValue(newsFile, NewsContainer.class) : new NewsContainer(new ArrayList<>());
+                    mapper.readValue(newsFile, NewsContainer.class) :
+                    new NewsContainer(new ArrayList<>());
 
             container.getNews().add(convertToDto(news));
             mapper.writeValue(newsFile, container);

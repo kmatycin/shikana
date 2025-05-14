@@ -59,5 +59,4 @@
 .main-content {
   flex: 1;
   padding-top: 60px; /* Отступ для фиксированного хедера */
-  background: #f5f5f5; /* Светлый фон тела */
 }

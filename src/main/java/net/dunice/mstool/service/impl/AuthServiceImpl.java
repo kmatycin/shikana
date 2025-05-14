@@ -35,7 +35,7 @@ public class AuthServiceImpl implements AuthService {
         user.setPassword(encoder.encode(request.getPassword()));
         userRepository.save(user);
         LoginUserResponse loginUser = userMappers.toLoginUserResponse(user);
-        loginUser.setToken(jwtService.generateToken(String.valueOf(loginUser.getId())));
+        loginUser.setToken(jwtService.generateToken(user.getEmail()));
         return loginUser;
     }
 
@@ -47,7 +47,7 @@ public class AuthServiceImpl implements AuthService {
             throw new CustomException(ErrorCodes.PASSWORD_NOT_VALID);
         }
         LoginUserResponse loginUser = userMappers.toLoginUserResponse(user);
-        loginUser.setToken(jwtService.generateToken(String.valueOf(loginUser.getId())));
+        loginUser.setToken(jwtService.generateToken(user.getEmail()));
         return loginUser;
     }
 }

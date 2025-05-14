@@ -8,7 +8,6 @@ import net.dunice.mstool.repository.UserRepository;
 import net.dunice.mstool.security.JwtService;
 import net.dunice.mstool.service.ProfileService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.stereotype.Service;
 import java.util.UUID;
 
@@ -34,9 +33,9 @@ public class ProfileServiceImpl implements ProfileService {
 
     @Override
     public ProfileDto updateProfile(ProfileDto profileDto, String token) {
-        UUID userId = jwtService.extractUserId(token);
-        UserEntity user = userRepository.findById(userId)
-                .orElseThrow(() -> new CustomException(ErrorCodes.CODE_NOT_NULL));
+        String email = jwtService.getEmailFromToken(token);
+        UserEntity user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new CustomException(ErrorCodes.USER_NOT_FOUND));
 
         user.setUsername(profileDto.getUsername());
         user.setAvatarUrl(profileDto.getAvatarUrl());
@@ -56,10 +55,8 @@ public class ProfileServiceImpl implements ProfileService {
 
     @Override
     public ProfileDto getProfileByToken(String token) {
-        System.out.println("Токен в сервисе: " + token);
-        UUID userId = jwtService.extractUserId(token); // Токен уже должен быть чистым
-        System.out.println("Извлечённый userId: " + userId);
-        UserEntity user = userRepository.findById(userId)
+        String email = jwtService.getEmailFromToken(token);
+        UserEntity user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new CustomException(ErrorCodes.USER_NOT_FOUND));
         ProfileDto profileDto = new ProfileDto();
         profileDto.setId(user.getId());

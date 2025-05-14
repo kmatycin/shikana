@@ -6,6 +6,7 @@ import NewsPage from './pages/NewsPage';
 import ProfilePage from './pages/ProfilePage';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
+import EventForm from './components/EventForm';
 import './App.css';
 
 function App() {
@@ -20,6 +21,7 @@ function App() {
                         <Route path="/profile" element={<ProfilePage />} />
                         <Route path="/login" element={<LoginPage />} />
                         <Route path="/register" element={<RegisterPage />} />
+                        <Route path="/events/create" element={<EventForm />} />
                     </Routes>
                 </main>
             </div>
