@@ -1,15 +1,20 @@
 package net.dunice.mstool.service;
 
 import net.dunice.mstool.DTO.request.EventDto;
-import java.io.IOException;
-import java.util.List;
+import net.dunice.mstool.DTO.response.EventResponseDto;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
 import java.util.UUID;
 
 public interface EventService {
-    List<EventDto> getAllEvents(int limit, int offset);
-    List<EventDto> getExternalEvents();
-    EventDto createEvent(EventDto eventDto, String token);
-    EventDto updateEvent(UUID id, EventDto eventDto, String token);
-    void deleteEvent(UUID id, String token);
-    List<EventDto> parseExternalEvents()throws IOException;
+    EventResponseDto createEvent(EventDto eventDto, String userEmail);
+    
+    Page<EventResponseDto> getAllEvents(Pageable pageable);
+    
+    EventResponseDto getEventById(UUID id);
+    
+    EventResponseDto updateEvent(UUID id, EventDto eventDto, String userEmail);
+    
+    void deleteEvent(UUID id, String userEmail);
 }

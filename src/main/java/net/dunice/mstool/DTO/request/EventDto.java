@@ -1,24 +1,32 @@
 package net.dunice.mstool.DTO.request;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
-import java.time.Instant;
+import net.dunice.mstool.constants.EventStatus;
 
 @Data
 public class EventDto {
+    @NotBlank(message = "Title is required")
     private String title;
+
     private String description;
+
+    @NotBlank(message = "Date is required")
     private String date;
+
     private String location;
+
     private String imageUrl;
-    private boolean isExternal;
-    private Instant createdAt;
-    private Instant updatedAt;
-    private String createdBy;
-    private String updatedBy;
-    
-    // Дополнительные поля для внешних событий
-    private String status;
+
+    @NotNull(message = "External flag is required")
+    private Boolean isExternal;
+
+    private EventStatus status;
+
     private String game;
+
     private String stages;
+
     private String organizer;
 }

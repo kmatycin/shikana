@@ -58,28 +58,6 @@ public class NewsServiceImpl implements NewsService {
         return convertToDto(savedNews);
     }
 
-    private void updateNewsJson(NewsEntity news) {
-        try {
-            ObjectMapper mapper = new ObjectMapper();
-            mapper.enable(SerializationFeature.INDENT_OUTPUT);
-            LocalDate date = news.getCreatedAt().atZone(ZoneId.systemDefault()).toLocalDate();
-            String fileName = String.format("news/%d/%02d_%s.json",
-                    date.getYear(), date.getMonthValue(), getMonthName(date.getMonthValue()));
-
-            File newsFile = new File(fileName);
-            newsFile.getParentFile().mkdirs();
-
-            NewsContainer container = newsFile.exists() ?
-                    mapper.readValue(newsFile, NewsContainer.class) :
-                    new NewsContainer(new ArrayList<>());
-
-            container.getNews().add(convertToDto(news));
-            mapper.writeValue(newsFile, container);
-        } catch (IOException e) {
-            throw new CustomException(ErrorCodes.UNKNOWN);
-        }
-    }
-
     private NewsDto convertToDto(NewsEntity entity) {
         NewsDto dto = new NewsDto();
         dto.setId(entity.getId());

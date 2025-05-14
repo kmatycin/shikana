@@ -3,6 +3,7 @@ package net.dunice.mstool.entity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import net.dunice.mstool.constants.EventStatus;
 import java.time.Instant;
 import java.util.UUID;
 
@@ -33,8 +34,9 @@ public class EventEntity {
     @Column(nullable = false)
     private boolean isExternal;
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private String status = "UPCOMING";
+    private EventStatus status = EventStatus.UPCOMING;
 
     @Column
     private String game;
@@ -45,14 +47,14 @@ public class EventEntity {
     @Column
     private String organizer;
 
-    @Column(nullable = false)
+    @Column(nullable = false, updatable = false)
     private Instant createdAt;
 
     @Column
     private Instant updatedAt;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "created_by")
+    @JoinColumn(name = "created_by", nullable = false)
     private UserEntity createdBy;
 
     @ManyToOne(fetch = FetchType.LAZY)

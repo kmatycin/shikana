@@ -2,70 +2,53 @@ package net.dunice.mstool.controller;
 
 import lombok.RequiredArgsConstructor;
 import net.dunice.mstool.DTO.request.EventDto;
-import net.dunice.mstool.DTO.response.common.CustomSuccessResponse;
-import net.dunice.mstool.constants.ConstantFields;
+import net.dunice.mstool.DTO.response.EventResponseDto;
 import net.dunice.mstool.service.EventService;
-import org.springframework.http.HttpStatus;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/events")
 @RequiredArgsConstructor
 public class EventController {
-
     private final EventService eventService;
 
-    @GetMapping
-    public ResponseEntity<CustomSuccessResponse<List<EventDto>>> getEvents(
-            @RequestParam(defaultValue = "10") int limit,
-            @RequestParam(defaultValue = "0") int offset,
-            @RequestHeader(ConstantFields.AUTHORIZATION) String token) {
-        List<EventDto> events = eventService.getAllEvents(limit, offset);
-        return ResponseEntity.ok(new CustomSuccessResponse<>(events));
-    }
-
-    @GetMapping("/external")
-    public ResponseEntity<CustomSuccessResponse<List<EventDto>>> getExternalEvents(
-            @RequestHeader(ConstantFields.AUTHORIZATION) String token) {
-        List<EventDto> externalEvents = eventService.getExternalEvents();
-        return ResponseEntity.ok(new CustomSuccessResponse<>(externalEvents));
-    }
-
     @PostMapping
-    public ResponseEntity<CustomSuccessResponse<EventDto>> createEvent(
+    public ResponseEntity<EventResponseDto> createEvent(
             @RequestBody EventDto eventDto,
-            @RequestHeader(ConstantFields.AUTHORIZATION) String token) {
-        EventDto createdEvent = eventService.createEvent(eventDto, token);
-        return ResponseEntity.status(HttpStatus.CREATED).body(new CustomSuccessResponse<>(createdEvent));
+            @AuthenticationPrincipal UserDetails userDetails) {
+        return ResponseEntity.ok(eventService.createEvent(eventDto, userDetails.getUsername()));
     }
 
-    @PostMapping("/external")
-    public ResponseEntity<CustomSuccessResponse<EventDto>> createExternalEvent(
-            @RequestBody EventDto eventDto,
-            @RequestHeader(ConstantFields.AUTHORIZATION) String token) {
-        eventDto.setExternal(true);
-        EventDto createdEvent = eventService.createEvent(eventDto, token);
-        return ResponseEntity.status(HttpStatus.CREATED).body(new CustomSuccessResponse<>(createdEvent));
+    @GetMapping
+    public ResponseEntity<Page<EventResponseDto>> getAllEvents(Pageable pageable) {
+        return ResponseEntity.ok(eventService.getAllEvents(pageable));
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<EventResponseDto> getEventById(@PathVariable UUID id) {
+        return ResponseEntity.ok(eventService.getEventById(id));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<CustomSuccessResponse<EventDto>> updateEvent(
+    public ResponseEntity<EventResponseDto> updateEvent(
             @PathVariable UUID id,
             @RequestBody EventDto eventDto,
-            @RequestHeader(ConstantFields.AUTHORIZATION) String token) {
-        EventDto updatedEvent = eventService.updateEvent(id, eventDto, token);
-        return ResponseEntity.ok(new CustomSuccessResponse<>(updatedEvent));
+            @AuthenticationPrincipal UserDetails userDetails) {
+        return ResponseEntity.ok(eventService.updateEvent(id, eventDto, userDetails.getUsername()));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<CustomSuccessResponse<Void>> deleteEvent(
+    public ResponseEntity<Void> deleteEvent(
             @PathVariable UUID id,
-            @RequestHeader(ConstantFields.AUTHORIZATION) String token) {
-        eventService.deleteEvent(id, token);
-        return ResponseEntity.ok(new CustomSuccessResponse<>(null));
+            @AuthenticationPrincipal UserDetails userDetails) {
+        eventService.deleteEvent(id, userDetails.getUsername());
+        return ResponseEntity.noContent().build();
     }
 }
