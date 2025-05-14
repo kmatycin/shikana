@@ -1,0 +1,105 @@
+/* EventsPage.css */
+.events-container {
+    padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+    background-color: #292f3e;
+    min-height: 100vh;
+    color: #ffffff;
+}
+
+.events-title {
+    color: #ffffff;
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.events-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+}
+
+.event-card {
+    background: #3a4255;
+    border-radius: 10px;
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.event-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+}
+
+.event-image-container {
+    position: relative;
+    height: 200px;
+    overflow: hidden;
+}
+
+.event-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.event-card:hover .event-image {
+    transform: scale(1.05);
+}
+
+.event-content {
+    padding: 15px;
+}
+
+.event-title {
+    margin: 0 0 10px 0;
+    color: #ffffff;
+    font-size: 1.2rem;
+}
+
+.event-description {
+    color: #b8c1d1;
+    margin-bottom: 15px;
+    font-size: 0.9rem;
+}
+
+.event-details {
+    display: flex;
+    justify-content: space-between;
+    color: #8a94a8;
+    font-size: 0.8rem;
+}
+
+.external-badge {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: #ff5722;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 15px;
+    font-size: 12px;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.error-message {
+    color: #ff6b6b;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.loading {
+    color: #ffffff;
+    text-align: center;
+    padding: 50px;
+    font-size: 1.2rem;
+}
+
+/* Special styling for external events */
+.event-card.external {
+    border-left: 4px solid #ff5722;
+}
