@@ -1,0 +1,27 @@
+.user-mention {
+    display: inline-flex;
+    align-items: center;
+    text-decoration: none;
+    color: #007bff;
+    margin: 0 2px;
+    padding: 2px 4px;
+    border-radius: 4px;
+    background-color: rgba(0, 123, 255, 0.1);
+    transition: background-color 0.2s;
+}
+
+.user-mention:hover {
+    background-color: rgba(0, 123, 255, 0.2);
+    text-decoration: none;
+}
+
+.mention-avatar {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    margin-right: 4px;
+}
+
+.mention-username {
+    font-weight: 500;
+} 

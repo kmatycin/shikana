@@ -12,6 +12,7 @@ import net.dunice.mstool.repository.NewsRepository;
 import net.dunice.mstool.repository.UserRepository;
 import net.dunice.mstool.security.JwtService;
 import net.dunice.mstool.service.NewsService;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import java.io.File;
 import java.io.IOException;
@@ -25,6 +26,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -37,8 +39,10 @@ public class NewsServiceImpl implements NewsService {
 
     @Override
     public List<NewsDto> getAllNews(int limit, int offset) {
-        // Логика получения новостей с пагинацией
-        return List.of(); // Заглушка
+        return newsRepository.findAll(PageRequest.of(offset / limit, limit))
+                .stream()
+                .map(this::convertToDto)
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -75,8 +79,9 @@ public class NewsServiceImpl implements NewsService {
     }
 
     private String getAuthorName(UUID authorId) {
-        // Логика получения имени автора
-        return "Author"; // Заглушка
+        return userRepository.findById(authorId)
+                .map(UserEntity::getUsername)
+                .orElse("Unknown Author");
     }
 
     private static class NewsContainer {

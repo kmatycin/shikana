@@ -7,6 +7,8 @@ import ProfilePage from './pages/ProfilePage';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import EventForm from './components/EventForm';
+import PilotProfile from './pages/PilotProfile';
+import PilotsPage from './pages/PilotsPage';
 import './App.css';
 
 function App() {
@@ -22,6 +24,8 @@ function App() {
                         <Route path="/login" element={<LoginPage />} />
                         <Route path="/register" element={<RegisterPage />} />
                         <Route path="/events/create" element={<EventForm />} />
+                        <Route path="/pilots" element={<PilotsPage />} />
+                        <Route path="/pilots/:nickname" element={<PilotProfile />} />
                     </Routes>
                 </main>
             </div>

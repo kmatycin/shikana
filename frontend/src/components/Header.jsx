@@ -45,6 +45,11 @@ function Header() {
                             </button>
                         </li>
                         <li>
+                            <button onClick={() => { navigate('/pilots'); setIsMenuOpen(false); }} className="menu-item">
+                                Пилоты
+                            </button>
+                        </li>
+                        <li>
                             <button onClick={() => { navigate('/profile'); setIsMenuOpen(false); }} className="menu-item">
                                 Профиль
                             </button>

@@ -56,7 +56,9 @@ public enum ErrorCodes {
     HTTP_MESSAGE_NOT_READABLE_EXCEPTION(47, ValidationConstants.HTTP_MESSAGE_NOT_READABLE_EXCEPTION),
     NO_ACCESS_TO_USER_DATA(48, ValidationConstants.NO_ACCESS_TO_USER_DATA),
     EVENT_NOT_FOUND(49, "Event not found"),
-    FORBIDDEN(50, "Forbidden"),;
+    FORBIDDEN(50, "Forbidden"),
+    PILOT_NOT_FOUND(51, "Pilot not found"),
+    PILOT_ALREADY_EXISTS(52, "Pilot already exists");
 
     private static Map<String, Integer> codesMap = new HashMap<>();
 

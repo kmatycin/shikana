@@ -41,7 +41,7 @@ function EventsPage() {
             const response = await axios.get('/api/events', {
                 headers: { Authorization: `Bearer ${token}` }
             });
-            setEvents(response.data.content.map(event => ({
+            setEvents(response.data.data.content.map(event => ({
                 ...event,
                 date: event.date ? new Date(event.date) : null
             })));
@@ -85,11 +85,14 @@ function EventsPage() {
         }
 
         try {
-            const response = await axios.get(`/api/users/search?query=${query}`);
-            setMentionResults(response.data);
+            const response = await axios.get(`/api/pilots/search?query=${query}`);
+            setMentionResults(response.data.map(pilot => ({
+                username: pilot.nickname,
+                avatarUrl: pilot.photoUrl
+            })));
             setShowMentionResults(true);
         } catch (err) {
-            console.error('Failed to search users:', err);
+            console.error('Failed to search pilots:', err);
         }
     };
 

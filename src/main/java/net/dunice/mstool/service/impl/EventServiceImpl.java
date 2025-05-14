@@ -16,11 +16,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 @Service
 @RequiredArgsConstructor
@@ -28,32 +24,12 @@ public class EventServiceImpl implements EventService {
     private final EventRepository eventRepository;
     private final UserRepository userRepository;
     private final EventMapper eventMapper;
-    private static final Pattern MENTION_PATTERN = Pattern.compile("@(\\w+)");
-
-    private void validateMentions(String description) {
-        if (description == null) return;
-        
-        Matcher matcher = MENTION_PATTERN.matcher(description);
-        List<String> mentionedUsernames = new ArrayList<>();
-        
-        while (matcher.find()) {
-            mentionedUsernames.add(matcher.group(1));
-        }
-        
-        for (String username : mentionedUsernames) {
-            if (!userRepository.existsByUsername(username)) {
-                throw new CustomException(ErrorCodes.USER_NOT_FOUND);
-            }
-        }
-    }
 
     @Override
     @Transactional
     public EventResponseDto createEvent(EventDto eventDto, String userEmail) {
         UserEntity user = userRepository.findByEmail(userEmail)
                 .orElseThrow(() -> new CustomException(ErrorCodes.USER_NOT_FOUND));
-
-        validateMentions(eventDto.getDescription());
 
         EventEntity event = eventMapper.toEntity(eventDto);
         event.setCreatedBy(user);
@@ -90,8 +66,6 @@ public class EventServiceImpl implements EventService {
         if (!event.getCreatedBy().getId().equals(user.getId()) && !user.getRole().equals("ADMIN")) {
             throw new CustomException(ErrorCodes.FORBIDDEN);
         }
-
-        validateMentions(eventDto.getDescription());
 
         eventMapper.updateEntityFromDto(eventDto, event);
         event.setUpdatedBy(user);

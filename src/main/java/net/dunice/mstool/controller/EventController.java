@@ -3,6 +3,7 @@ package net.dunice.mstool.controller;
 import lombok.RequiredArgsConstructor;
 import net.dunice.mstool.DTO.request.EventDto;
 import net.dunice.mstool.DTO.response.EventResponseDto;
+import net.dunice.mstool.DTO.response.common.CustomSuccessResponse;
 import net.dunice.mstool.service.EventService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -20,28 +21,32 @@ public class EventController {
     private final EventService eventService;
 
     @PostMapping
-    public ResponseEntity<EventResponseDto> createEvent(
+    public ResponseEntity<CustomSuccessResponse<EventResponseDto>> createEvent(
             @RequestBody EventDto eventDto,
             @AuthenticationPrincipal UserDetails userDetails) {
-        return ResponseEntity.ok(eventService.createEvent(eventDto, userDetails.getUsername()));
+        EventResponseDto createdEvent = eventService.createEvent(eventDto, userDetails.getUsername());
+        return ResponseEntity.ok(new CustomSuccessResponse<>(createdEvent));
     }
 
     @GetMapping
-    public ResponseEntity<Page<EventResponseDto>> getAllEvents(Pageable pageable) {
-        return ResponseEntity.ok(eventService.getAllEvents(pageable));
+    public ResponseEntity<CustomSuccessResponse<Page<EventResponseDto>>> getAllEvents(Pageable pageable) {
+        Page<EventResponseDto> events = eventService.getAllEvents(pageable);
+        return ResponseEntity.ok(new CustomSuccessResponse<>(events));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<EventResponseDto> getEventById(@PathVariable UUID id) {
-        return ResponseEntity.ok(eventService.getEventById(id));
+    public ResponseEntity<CustomSuccessResponse<EventResponseDto>> getEventById(@PathVariable UUID id) {
+        EventResponseDto event = eventService.getEventById(id);
+        return ResponseEntity.ok(new CustomSuccessResponse<>(event));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<EventResponseDto> updateEvent(
+    public ResponseEntity<CustomSuccessResponse<EventResponseDto>> updateEvent(
             @PathVariable UUID id,
             @RequestBody EventDto eventDto,
             @AuthenticationPrincipal UserDetails userDetails) {
-        return ResponseEntity.ok(eventService.updateEvent(id, eventDto, userDetails.getUsername()));
+        EventResponseDto updatedEvent = eventService.updateEvent(id, eventDto, userDetails.getUsername());
+        return ResponseEntity.ok(new CustomSuccessResponse<>(updatedEvent));
     }
 
     @DeleteMapping("/{id}")

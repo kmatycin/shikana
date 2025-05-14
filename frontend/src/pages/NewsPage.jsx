@@ -10,28 +10,28 @@ function NewsPage() {
     const token = localStorage.getItem('token');
     const navigate = useNavigate();
 
+    const fetchNews = async () => {
+        setLoading(true);
+        try {
+            const response = await axios.get('/api/news', {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+            setNews(response.data.data);
+        } catch (err) {
+            setError('Ошибка загрузки новостей: ' + (err.response?.data?.message || 'Попробуйте снова'));
+            if (err.response?.status === 401) navigate('/login');
+        } finally {
+            setLoading(false);
+        }
+    };
+
     useEffect(() => {
         if (!token || !token.includes('.')) {
             navigate('/login');
             return;
         }
 
-        setLoading(true);
-
-        // Запрос только на /api/news
-        axios
-            .get('/api/news', { headers: { Authorization: `Bearer ${token}` } })
-            .then((response) => {
-                // Если API возвращает массив — используем его напрямую
-                // Если API возвращает объект с полем data — используем response.data.data
-                const data = Array.isArray(response.data) ? response.data : response.data.data;
-                setNews(data || []);
-            })
-            .catch((err) => {
-                setError('Ошибка загрузки новостей: ' + (err.response?.data?.message || 'Попробуйте снова'));
-                if (err.response?.status === 401) navigate('/login');
-            })
-            .finally(() => setLoading(false));
+        fetchNews();
     }, [token, navigate]);
 
     if (loading) {
