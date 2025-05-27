@@ -1,0 +1,80 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1748356971377-6
+      author: kmatycin
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - dropForeignKeyConstraint:
+            baseTableName: user_achievements
+            constraintName: fk6vt5fpu0uta41vny1x6vpk45k
+  - changeSet:
+      id: 1748356971377-5
+      author: kmatycin
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addUniqueConstraint:
+            columnNames: nickname
+            constraintName: uc_pilots_nickname
+            tableName: pilots
+  - changeSet:
+      id: 1748356971377-9
+      author: kmatycin
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - dropTable:
+            cascadeConstraints: true
+            tableName: user_achievements
+  - changeSet:
+      id: 1748356971377-10
+      author: kmatycin
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - dropTable:
+            cascadeConstraints: true
+            tableName: users
+  - changeSet:
+      id: 1748356971377-11
+      author: kmatycin
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - dropSequence:
+            sequenceName: persons_seq
+  - changeSet:
+      id: 1748356971377-1
+      author: kmatycin
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addNotNullConstraint:
+            columnDataType: UUID
+            columnName: created_by
+            tableName: events
+            validate: true
+  - changeSet:
+      id: 1748356971377-2
+      author: kmatycin
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - dropNotNullConstraint:
+            columnDataType: varchar(255)
+            columnName: location
+            tableName: events
+  - changeSet:
+      id: 1748356971377-3
+      author: kmatycin
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - modifyDataType:
+            columnName: race_history
+            newDataType: VARCHAR(255)
+            tableName: pilots
+  - changeSet:
+      id: 1748356971377-4
+      author: kmatycin
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addNotNullConstraint:
+            columnDataType: VARCHAR(255)
+            columnName: race_history
+            tableName: pilots
+            validate: true
+
