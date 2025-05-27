@@ -34,8 +34,10 @@ const PilotProfile = () => {
 
     const parseJsonField = (jsonString) => {
         try {
-            return JSON.parse(jsonString);
+            const unescapedString = jsonString.replace(/&quot;/g, '"');
+            return JSON.parse(unescapedString);
         } catch (e) {
+            console.error('Error parsing JSON:', e);
             return null;
         }
     };
@@ -43,47 +45,47 @@ const PilotProfile = () => {
     const formatTitles = (titles) => {
         if (!titles) return null;
         const parsedTitles = parseJsonField(titles);
-        if (!parsedTitles) return null;
+        if (!parsedTitles || !parsedTitles.title || !parsedTitles.year) return null;
 
-        if (Array.isArray(parsedTitles)) {
-            return parsedTitles.map((title, index) => (
-                <div key={index} className="title-item">
-                    <span className="title-name">{title.title}</span>
-                    <span className="title-year">{title.year}</span>
-                    
-                </div>
-            ));
-        } else {
-            return (
-                <div className="title-item">
-                    <span className="title-name">{parsedTitles.title}</span>
-                    <span className="title-year">{parsedTitles.year}</span>
-                    
-                </div>
-            );
-        }
+        return (
+            <div className="title-item">
+                <span className="title-name">{parsedTitles.title}</span>
+                <span className="title-year">{parsedTitles.year}</span>
+            </div>
+        );
     };
 
     const formatCars = (cars) => {
         if (!cars) return null;
         const parsedCars = parseJsonField(cars);
-        if (!parsedCars) return null;
+        if (!parsedCars || !parsedCars.model || !parsedCars.year) return null;
 
-        if (Array.isArray(parsedCars)) {
-            return parsedCars.map((car, index) => (
-                <div key={index} className="car-item">
-                    <span className="car-model">{car.model}</span>
-                    <span className="car-year">{car.year}</span>
+        return (
+            <div className="car-item">
+                <span className="car-model">{parsedCars.model}</span>
+                <span className="car-year">{parsedCars.year}</span>
+            </div>
+        );
+    };
+
+    const formatRaceHistory = (history) => {
+        if (!history) return null;
+        const parsedHistory = parseJsonField(history);
+        if (!parsedHistory || !Array.isArray(parsedHistory)) return null;
+        
+        return parsedHistory.map((race, index) => (
+            <div key={index} className="race-item">
+                <div className="race-header">
+                    <span className="race-date">{new Date(race.date).toLocaleDateString()}</span>
+                    <span className="race-position">P{race.position}</span>
                 </div>
-            ));
-        } else {
-            return (
-                <div className="car-item">
-                    <span className="car-model">{parsedCars.model}</span>
-                    <span className="car-year">{parsedCars.year}</span>
+                <div className="race-name">{race.name}</div>
+                <div className="race-points">
+                    <span className="points-label">Очки лицензии:</span>
+                    <span className="points-value">{race.licensePoints}</span>
                 </div>
-            );
-        }
+            </div>
+        ));
     };
 
     if (loading) return <div className="loading">Загрузка информации о пилоте...</div>;
@@ -163,6 +165,15 @@ const PilotProfile = () => {
                             <h4 className="section-title">Машины</h4>
                             <div className="cars-list">
                                 {formatCars(pilot.cars)}
+                            </div>
+                        </div>
+                    )}
+
+                    {pilot.raceHistory && (
+                        <div className="pilot-history">
+                            <h4 className="section-title">История участий</h4>
+                            <div className="race-history-list">
+                                {formatRaceHistory(pilot.raceHistory)}
                             </div>
                         </div>
                     )}

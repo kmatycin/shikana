@@ -47,10 +47,7 @@ public class PilotEntity {
     private String titles; // JSON строка с титулами
 
     @Column(nullable = false)
-    private Integer seasonWins;
-
-    @Column(nullable = false)
-    private Integer totalWins;
+    private String raceHistory; // JSON строка с историей участий в гонках
 
     @Column(nullable = false)
     private String cars; // JSON строка с машинами

@@ -21,8 +21,7 @@ public class PilotResponse {
     private String discipline;
     private String licenseLevel;
     private String titles;
-    private Integer seasonWins;
-    private Integer totalWins;
+    private String raceHistory;
     private String cars;
     private String photoUrl;
     private Boolean isActive;

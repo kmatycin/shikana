@@ -2,34 +2,121 @@
     padding: 2rem;
     max-width: 1200px;
     margin: 0 auto;
+    background: #1a1a1a;
 }
 
 .pilots-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 2rem;
+    margin-bottom: 3rem;
+    position: relative;
+    padding: 2rem;
+    background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
+    border-radius: 16px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+}
+
+.pilots-header::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: 
+        linear-gradient(45deg, transparent 48%, #e10600 49%, #e10600 51%, transparent 52%),
+        linear-gradient(-45deg, transparent 48%, #e10600 49%, #e10600 51%, transparent 52%);
+    background-size: 30px 30px;
+    opacity: 0.1;
+    animation: headerPattern 20s linear infinite;
+}
+
+.pilots-header::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(circle at 50% 50%, rgba(225, 6, 0, 0.1) 0%, transparent 70%);
+    pointer-events: none;
+}
+
+@keyframes headerPattern {
+    0% {
+        background-position: 0 0;
+    }
+    100% {
+        background-position: 30px 30px;
+    }
 }
 
 .pilots-title {
-    font-size: 2rem;
-    color: #1a1a1a;
+    font-size: 2.5rem;
+    color: white;
     margin: 0;
+    font-family: 'Formula1', sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    position: relative;
+    z-index: 1;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.pilots-title::before {
+    content: '';
+    position: absolute;
+    left: -20px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 8px;
+    height: 40px;
+    background: #e10600;
+    border-radius: 4px;
+    box-shadow: 0 0 20px rgba(225, 6, 0, 0.5);
 }
 
 .create-pilot-button {
-    background-color: #e10600;
+    background: linear-gradient(135deg, #e10600 0%, #ff1a1a 100%);
     color: white;
     border: none;
-    padding: 0.75rem 1.5rem;
-    border-radius: 4px;
+    padding: 1rem 2rem;
+    border-radius: 8px;
     font-weight: 600;
     cursor: pointer;
-    transition: background-color 0.2s;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    position: relative;
+    z-index: 1;
+    overflow: hidden;
+}
+
+.create-pilot-button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255, 255, 255, 0.2),
+        transparent
+    );
+    transition: 0.5s;
 }
 
 .create-pilot-button:hover {
-    background-color: #b30000;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 20px rgba(225, 6, 0, 0.3);
+}
+
+.create-pilot-button:hover::before {
+    left: 100%;
 }
 
 .pilots-grid {
@@ -39,282 +126,464 @@
 }
 
 .pilot-card {
-    background: white;
-    border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    background: #2a2a2a;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
     overflow: hidden;
-    transition: transform 0.2s, box-shadow 0.2s;
+    transition: all 0.3s ease;
+    position: relative;
+    border: 1px solid #3a3a3a;
 }
 
 .pilot-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+    transform: translateY(-8px);
+    box-shadow: 0 8px 30px rgba(225, 6, 0, 0.2);
+    border-color: #e10600;
 }
 
 .pilot-header {
     position: relative;
-    background: linear-gradient(135deg, #1a1a1a 0%, #333 100%);
-    padding: 1.5rem;
+    background: linear-gradient(135deg, #e10600 0%, #ff1a1a 100%);
+    padding: 2rem;
     color: white;
     display: flex;
     align-items: center;
-    gap: 1rem;
+    gap: 1.5rem;
+    min-height: 180px;
 }
 
 .pilot-image-container {
-    width: 100px;
-    height: 100px;
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
     overflow: hidden;
-    border: 3px solid #e10600;
+    border: 4px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    position: relative;
+    z-index: 2;
 }
 
 .pilot-image {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.pilot-card:hover .pilot-image {
+    transform: scale(1.1);
 }
 
 .pilot-header-info {
     flex: 1;
+    position: relative;
+    z-index: 2;
 }
 
 .pilot-name {
-    font-size: 1.5rem;
+    font-size: 1.8rem;
     margin: 0;
-    font-weight: 700;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 .pilot-number {
-    font-size: 2.5rem;
-    font-weight: 800;
-    color: #e10600;
+    font-size: 3.5rem;
+    font-weight: 900;
+    color: rgba(255, 255, 255, 0.9);
     opacity: 0.8;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+    font-family: 'Formula1', sans-serif;
 }
 
 .pilot-content {
-    padding: 1.5rem;
+    padding: 2rem;
+    background: #2a2a2a;
 }
 
 .pilot-details {
-    margin-bottom: 1.5rem;
+    margin-bottom: 2rem;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
 }
 
 .detail-row {
     display: flex;
-    justify-content: space-between;
-    padding: 0.5rem 0;
-    border-bottom: 1px solid #eee;
+    flex-direction: column;
+    padding: 0.75rem;
+    background: #333333;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    border: 1px solid #3a3a3a;
 }
 
-.detail-row:last-child {
-    border-bottom: none;
+.detail-row:hover {
+    background: #3a3a3a;
+    transform: translateY(-2px);
+    border-color: #e10600;
 }
 
 .detail-label {
-    color: #666;
-    font-weight: 500;
+    color: #999;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 0.25rem;
 }
 
 .detail-value {
-    color: #1a1a1a;
+    color: #ffffff;
     font-weight: 600;
+    font-size: 1.1rem;
 }
 
 .license-badge {
     background: #e10600;
     color: white;
-    padding: 0.25rem 0.75rem;
-    border-radius: 4px;
+    padding: 6px 12px;
+    border-radius: 20px;
     font-size: 0.9rem;
-}
-
-.wins-season {
-    color: #e10600;
-    font-weight: 700;
-}
-
-.wins-total {
-    color: #666;
-    font-size: 0.9rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    display: inline-block;
 }
 
 .section-title {
-    font-size: 1.1rem;
-    color: #1a1a1a;
-    margin: 1rem 0 0.5rem;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #ffffff;
+    margin: 2rem 0 1rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    position: relative;
     padding-bottom: 0.5rem;
-    border-bottom: 2px solid #e10600;
 }
 
-.titles-list, .cars-list {
+.section-title::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 50px;
+    height: 3px;
+    background: #e10600;
+}
+
+.titles-list, .cars-list, .race-history-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 1rem;
+}
+
+.title-item, .car-item, .race-item {
+    background: #333333;
+    padding: 1.25rem;
+    border-radius: 8px;
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
+    gap: 0.75rem;
+    transition: all 0.3s ease;
+    border: 1px solid #3a3a3a;
 }
 
-.title-item, .car-item {
-    background: #f8f8f8;
-    padding: 0.75rem;
-    border-radius: 4px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+.title-item:hover, .car-item:hover, .race-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(225, 6, 0, 0.2);
+    border-color: #e10600;
+    background: #3a3a3a;
 }
 
 .title-year, .car-year {
-    color: #666;
     font-size: 0.9rem;
+    color: #999;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
 
 .title-name, .car-model {
     font-weight: 600;
-    color: #1a1a1a;
+    color: #ffffff;
+    font-size: 1.1rem;
+}
+
+.race-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.5rem;
+}
+
+.race-date {
+    font-size: 0.9rem;
+    color: #999;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.race-position {
+    background: #e10600;
+    color: white;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-weight: 700;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.race-name {
+    font-weight: 600;
+    color: #ffffff;
+    font-size: 1.1rem;
+    margin: 0.5rem 0;
+}
+
+.race-points {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: #3a3a3a;
+    padding: 0.5rem;
+    border-radius: 4px;
+}
+
+.points-label {
+    font-size: 0.9rem;
+    color: #999;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.points-value {
+    font-weight: 700;
+    color: #e10600;
+    font-size: 1.1rem;
 }
 
 .pilot-status {
-    margin: 1rem 0;
-    text-align: right;
+    margin-top: 2rem;
+    display: flex;
+    justify-content: flex-end;
 }
 
 .status-badge {
-    display: inline-block;
-    padding: 0.25rem 0.75rem;
-    border-radius: 4px;
+    padding: 8px 16px;
+    border-radius: 20px;
     font-size: 0.9rem;
-    font-weight: 500;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
 }
 
 .status-badge.active {
-    background: #28a745;
+    background: #4CAF50;
     color: white;
 }
 
 .status-badge.inactive {
-    background: #dc3545;
+    background: #FFA726;
     color: white;
 }
 
 .status-badge.retired {
-    background: #6c757d;
+    background: #9E9E9E;
     color: white;
 }
 
 .pilot-actions {
+    margin-top: 2rem;
     display: flex;
     gap: 1rem;
-    margin-top: 1.5rem;
 }
 
 .edit-button, .delete-button {
     flex: 1;
     padding: 0.75rem;
     border: none;
-    border-radius: 4px;
+    border-radius: 8px;
     font-weight: 600;
     cursor: pointer;
-    transition: background-color 0.2s;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 1px;
 }
 
 .edit-button {
-    background-color: #1a1a1a;
+    background: #2196F3;
     color: white;
 }
 
 .edit-button:hover {
-    background-color: #333;
+    background: #1976D2;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(33, 150, 243, 0.2);
 }
 
 .delete-button {
-    background-color: #dc3545;
+    background: #e10600;
     color: white;
 }
 
 .delete-button:hover {
-    background-color: #c82333;
+    background: #b30000;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(225, 6, 0, 0.2);
 }
 
-.pilot-form-container {
-    background: white;
+/* Модальное окно */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.9);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    backdrop-filter: blur(5px);
+}
+
+.modal-content {
+    background: #2a2a2a;
     padding: 2rem;
-    border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    margin-bottom: 2rem;
+    border-radius: 12px;
+    width: 90%;
+    max-width: 600px;
+    max-height: 90vh;
+    overflow-y: auto;
+    position: relative;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    border: 1px solid #3a3a3a;
 }
 
+.close-button {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: #666;
+    transition: color 0.3s ease;
+}
+
+.close-button:hover {
+    color: #e10600;
+}
+
+/* Форма */
 .pilot-form {
-    display: grid;
+    display: flex;
+    flex-direction: column;
     gap: 2rem;
 }
 
 .form-section {
-    background: #f8f8f8;
+    border: 1px solid #3a3a3a;
     padding: 1.5rem;
     border-radius: 8px;
+    background: #333333;
 }
 
 .form-section h3 {
-    margin: 0 0 1rem;
-    color: #1a1a1a;
+    margin: 0 0 1.5rem 0;
+    color: #ffffff;
     font-size: 1.2rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
 }
 
 .form-group {
-    margin-bottom: 1rem;
+    margin-bottom: 1.5rem;
 }
 
 .form-group label {
     display: block;
-    margin-bottom: 0.5rem;
-    color: #666;
+    margin-bottom: 0.75rem;
+    color: #999;
     font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-size: 0.9rem;
 }
 
-.form-group input[type="text"],
-.form-group input[type="number"],
-.form-group input[type="url"],
+.form-group input,
 .form-group select,
 .form-group textarea {
     width: 100%;
     padding: 0.75rem;
-    border: 1px solid #ddd;
-    border-radius: 4px;
+    border: 2px solid #3a3a3a;
+    border-radius: 8px;
     font-size: 1rem;
+    transition: all 0.3s ease;
+    background: #2a2a2a;
+    color: #ffffff;
 }
 
-.form-group input[type="checkbox"] {
-    margin-right: 0.5rem;
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    border-color: #e10600;
+    background: #333333;
+}
+
+.form-group textarea {
+    resize: vertical;
+    min-height: 120px;
+}
+
+.form-group small {
+    display: block;
+    margin-top: 0.5rem;
+    color: #999;
+    font-size: 0.9rem;
 }
 
 .submit-button {
-    background-color: #e10600;
+    background: #e10600;
     color: white;
     border: none;
-    padding: 1rem;
-    border-radius: 4px;
+    padding: 1rem 2rem;
+    border-radius: 8px;
     font-weight: 600;
     cursor: pointer;
-    transition: background-color 0.2s;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-size: 1.1rem;
 }
 
 .submit-button:hover {
-    background-color: #b30000;
+    background: #b30000;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(225, 6, 0, 0.2);
 }
 
-.error-message {
-    color: #dc3545;
-    margin-bottom: 1rem;
-    padding: 0.75rem;
-    background: #f8d7da;
-    border-radius: 4px;
-}
-
+/* Состояния загрузки и ошибок */
 .loading {
     text-align: center;
-    padding: 2rem;
+    padding: 3rem;
     color: #666;
     font-size: 1.2rem;
 }
 
+.error {
+    text-align: center;
+    padding: 2rem;
+    color: #f44336;
+    background: #ffebee;
+    border-radius: 8px;
+    margin: 1rem 0;
+}
+
+/* Адаптивность */
 @media (max-width: 768px) {
     .pilots-container {
         padding: 1rem;
@@ -324,7 +593,30 @@
         grid-template-columns: 1fr;
     }
 
-    .pilot-image-container {
-        height: 150px;
+    .pilot-header {
+        min-height: 150px;
+        padding: 1.5rem;
     }
+
+    .pilot-image-container {
+        width: 100px;
+        height: 100px;
+    }
+
+    .pilot-name {
+        font-size: 1.5rem;
+    }
+
+    .pilot-number {
+        font-size: 2.5rem;
+    }
+
+    .pilot-details {
+        grid-template-columns: 1fr;
+    }
+
+    .titles-list, .cars-list, .race-history-list {
+        grid-template-columns: 1fr;
+    }
+} 
 } 

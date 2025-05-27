@@ -129,6 +129,63 @@
     color: #333;
 }
 
+.race-history-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 15px;
+}
+
+.race-item {
+    background: #f5f5f5;
+    padding: 15px;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.race-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.race-date {
+    font-size: 0.9em;
+    color: #666;
+}
+
+.race-position {
+    background: #e10600;
+    color: white;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-weight: 600;
+    font-size: 0.9em;
+}
+
+.race-name {
+    font-weight: 500;
+    color: #333;
+    font-size: 1.1em;
+}
+
+.race-points {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.points-label {
+    font-size: 0.9em;
+    color: #666;
+}
+
+.points-value {
+    font-weight: 600;
+    color: #e10600;
+}
+
 .pilot-status {
     margin-top: 20px;
     display: flex;

@@ -62,7 +62,7 @@ public class NewsServiceImpl implements NewsService {
         return convertToDto(savedNews);
     }
 
-    private NewsDto convertToDto(NewsEntity entity) {
+    NewsDto convertToDto(NewsEntity entity) {
         NewsDto dto = new NewsDto();
         dto.setId(entity.getId());
         dto.setTitle(entity.getTitle());
@@ -74,11 +74,11 @@ public class NewsServiceImpl implements NewsService {
         return dto;
     }
 
-    private String getMonthName(int month) {
+    String getMonthName(int month) {
         return Month.of(month).getDisplayName(TextStyle.FULL_STANDALONE, new Locale("ru"));
     }
 
-    private String getAuthorName(UUID authorId) {
+    String getAuthorName(UUID authorId) {
         return userRepository.findById(authorId)
                 .map(UserEntity::getUsername)
                 .orElse("Unknown Author");

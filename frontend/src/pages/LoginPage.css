@@ -20,7 +20,7 @@
 }
 
 .header-container {
-    max-width: 375px; /* Базовая ширина для мобильных */
+
     margin: 0 auto;
     display: flex;
     justify-content: space-between;
